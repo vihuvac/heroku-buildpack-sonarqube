@@ -27,7 +27,7 @@ install_jdk() {
   install_java_with_overlay ${install_dir}
 }
 
-install_sonar() {
+install_sonarqube() {
   local BUILD_DIR=${1}
   local CACHE_DIR=${2}
 
@@ -59,7 +59,7 @@ install_sonar() {
   cp ${BP_DIR}/etc/sonar.properties ${SONAR_HOME}/conf
 
   #make wrapper writable
-  chmod +x /app/sonarqube/bin/linux-x86-64/./wrapper
+  chmod +x $SONAR_HOME/bin/linux-x86-64/./wrapper
 
   # Copy the vendored boot script for launching the WAR
   cp ${BP_DIR}/opt/boot.sh ${SONAR_HOME}/
@@ -110,4 +110,6 @@ install_codescan() {
 }
 
 install_jdk ${BUILD_DIR}
-install_sonar ${BUILD_DIR} ${CACHE_DIR}
+install_sonarqube ${BUILD_DIR} ${CACHE_DIR}
+install_codescan ${BUILD_DIR} ${CACHE_DIR}
+
