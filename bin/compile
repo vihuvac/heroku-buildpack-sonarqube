@@ -122,7 +122,7 @@ install_ant() {
   local CACHE_DIR=${2}
 
   ANT_DIST="apache-ant-${ANT_VERSION}"
-  ANT_DIST_ZIP="${ANT_DIST}.zip"
+  ANT_DIST_ZIP="${ANT_DIST}-bin.zip"
   ANT_HOME=${BUILD_DIR}/ant
 
   if [ ! -d ${CACHE_DIR} ]; then
