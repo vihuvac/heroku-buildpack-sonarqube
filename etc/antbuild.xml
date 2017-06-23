@@ -1,0 +1,28 @@
+<project name="VillageChief DataHub" xmlns:sf="salesforce">
+  <property environment="env"/>
+
+  <!-- Define the ant tasks. Use ant.file.dir to ensure we look for the jar files next to antbuild.xml -->
+  <dirname file="${ant.file}" property="ant.file.dir" />
+  <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+    <classpath path="/app/codescan/runner/sonar-ant-task-2.2.jar" />
+  </taskdef>
+  
+  <!-- Add the target -->
+  <target name="sonar">
+    <!-- db properties -->
+    <!-- location properties -->
+    <property name="sonar.projectBaseDir" value="${user.dir}" />
+   
+    <!-- define if not already defined properties -->
+    <property name="sonar.projectVersion" value="1.0-SNAPSHOT" />
+    <property name="sonar.sources" value="${user.dir}" />
+    <property name="sonar.sourceEncoding" value="utf8" />
+    <property name="sonar.host.url" value="${env.SONARQUBE_HOST_URL}" />
+    <property name="sonar.login" value="${env.SONARQUBE_HOST_USER}" />
+    <property name="sonar.password" value="${env.SONARQUBE_HOST_PASS}" />
+
+    <sonar:sonar xmlns:sonar="antlib:org.sonar.ant" />
+  </target>
+  
+</project>
+

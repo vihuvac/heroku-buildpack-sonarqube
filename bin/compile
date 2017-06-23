@@ -12,6 +12,7 @@ BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 SONAR_VERSION="6.3.1"
 CODESCAN_VERSION="3.7.5"
+ANT_VERSION="1.9.9"
 SONAR_HOME=${BUILD_DIR}/sonarqube
 
 install_jdk() {
@@ -103,6 +104,49 @@ install_codescan() {
   mv sonar-salesforce-plugin ${CODESCAN_HOME}
 
   cp $CODESCAN_HOME/sonar-salesforce-plugin-$CODESCAN_VERSION.jar $SONAR_HOME/extensions/plugins
+
+  # Copy vendored antbuild.xml
+  if [ ! -f ${BUILD_DIR}/build.xml ]; then
+    echo -n "-----> Installing default build.xml...."
+    cp ${BP_DIR}/etc/antbuild.xml ${BUILD_DIR}/build.xml
+    echo " done"
+  fi
+
+  if [ "${PIPESTATUS[*]}" != "0" ]; then
+    echo " !     Failed to install Sonar"
+    exit 1
+  fi
+  echo " done"
+}
+
+install_ant() {
+  local BUILD_DIR=${1}
+  local CACHE_DIR=${2}
+
+  ANT_DIST="apache-ant-${ANT_VERSION}"
+  ANT_DIST_ZIP="${ANT_DIST}.zip"
+  ANT_HOME=${BUILD_DIR}/ant
+
+  if [ ! -d ${CACHE_DIR} ]; then
+    mkdir -p ${CACHE_DIR}
+  fi
+
+  # Download Ant if not in cache
+  if [ ! -f ${CACHE_DIR}/${ANT_DIST_ZIP} ]; then
+    ANT_URL="http://downloads.code-scan.com/bundler/${ANT_DIST_ZIP}"
+    echo -n "-----> Downloading ${ANT_DIST}....."
+    curl --silent --location ${ANT_URL} > ${CACHE_DIR}/${ANT_DIST_ZIP}
+    echo " done"
+  fi
+
+  echo -n "-----> Installing ${ANT_DIST}...."
+
+  # Unzip Ant
+  # `unzip` command is not available.
+  cd ${BUILD_DIR}
+
+  jar xvf ${CACHE_DIR}/${ANT_DIST_ZIP} >/dev/null
+  mv ${ANT_DIST} ${ANT_HOME}
 
   if [ "${PIPESTATUS[*]}" != "0" ]; then
     echo " !     Failed to install Sonar"
