@@ -11,10 +11,11 @@ CACHE_DIR=$2
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 SONAR_VERSION="6.3.1"
+CODESCAN_VERSION="3.7.5"
+SONAR_HOME=${BUILD_DIR}/sonarqube
 
 install_jdk() {
   local install_dir=${1}
-  java.runtime.version=1.8
 
   JVM_COMMON_BUILDPACK=${JVM_COMMON_BUILDPACK:-https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/jvm-common.tgz}
   mkdir -p /tmp/jvm-common
@@ -32,7 +33,6 @@ install_sonar() {
 
   SONAR_DIST="sonarqube-${SONAR_VERSION}"
   SONAR_DIST_ZIP="${SONAR_DIST}.zip"
-  SONAR_HOME=${BUILD_DIR}/sonarqube
 
   if [ ! -d ${CACHE_DIR} ]; then
     mkdir -p ${CACHE_DIR}
@@ -64,6 +64,44 @@ install_sonar() {
   # Copy the vendored boot script for launching the WAR
   cp ${BP_DIR}/opt/boot.sh ${SONAR_HOME}/
   chmod +x ${SONAR_HOME}/boot.sh
+
+  if [ "${PIPESTATUS[*]}" != "0" ]; then
+    echo " !     Failed to install Sonar"
+    exit 1
+  fi
+}
+
+
+install_codescan() {
+  local BUILD_DIR=${1}
+  local CACHE_DIR=${2}
+
+  CODESCAN_DIST="sonar-salesforce-plugin-${CODESCAN_VERSION}"
+  CODESCAN_DIST_ZIP="${CODESCAN_DIST}.zip"
+  CODESCAN_HOME=${BUILD_DIR}/codescan
+
+  if [ ! -d ${CACHE_DIR} ]; then
+    mkdir -p ${CACHE_DIR}
+  fi
+
+  # Download CodeScan if not in cache
+  if [ ! -f ${CACHE_DIR}/${CODESCAN_DIST_ZIP} ]; then
+    CODESCAN_URL="http://downloads.code-scan.com/${CODESCAN_DIST_ZIP}"
+    echo -n "-----> Downloading ${CODESCAN_DIST}....."
+    curl --silent --location ${CODESCAN_URL} > ${CACHE_DIR}/${CODESCAN_DIST_ZIP}
+    echo " done"
+  fi
+
+  echo -n "-----> Installing ${CODESCAN_DIST}...."
+
+  # Unzip Codescan
+  # `unzip` command is not available.
+  cd ${BUILD_DIR}
+
+  jar xvf ${CACHE_DIR}/${CODESCAN_DIST_ZIP}
+  mv ${CODESCAN_DIST} ${CODESCAN_HOME}
+
+  cp $CODESCAN_HOME/sonar-salesforce-plugin/sonar-salesforce-plugin-$CODESCAN_VERSION.jar $SONAR_HOME/extensions/plugins
 
   if [ "${PIPESTATUS[*]}" != "0" ]; then
     echo " !     Failed to install Sonar"
