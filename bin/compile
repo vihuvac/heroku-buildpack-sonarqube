@@ -31,7 +31,7 @@ install_sonar() {
 
   SONAR_DIST="sonarqube-${SONAR_VERSION}"
   SONAR_DIST_ZIP="${SONAR_DIST}.zip"
-  SONAR_HOME=${BUILD_DIR}/sonar
+  SONAR_HOME=${BUILD_DIR}/sonarqube
 
   if [ ! -d ${CACHE_DIR} ]; then
     mkdir -p ${CACHE_DIR}

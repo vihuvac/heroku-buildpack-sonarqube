@@ -15,6 +15,6 @@ EOF
 if [ ! -f $BUILD_DIR/Procfile ]; then
   cat <<EOF
 default_process_types:
-  web: sh sonarqube/war/boot.sh
+  web: sh sonar/bin/linux-x86-64/sonar.sh
 EOF
 fi
