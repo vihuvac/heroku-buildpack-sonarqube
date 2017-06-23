@@ -15,7 +15,7 @@
    
     <!-- define if not already defined properties -->
     <property name="sonar.projectVersion" value="1.0-SNAPSHOT" />
-    <property name="sonar.sources" value="${user.dir}" />
+    <property name="sonar.sources" value="${user.dir}/src" />
     <property name="sonar.sourceEncoding" value="utf8" />
     <property name="sonar.host.url" value="${env.SONARQUBE_HOST_URL}" />
     <property name="sonar.login" value="${env.SONARQUBE_HOST_USER}" />
