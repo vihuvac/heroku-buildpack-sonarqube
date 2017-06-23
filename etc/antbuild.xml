@@ -20,8 +20,8 @@
     <property name="sonar.host.url" value="${env.SONARQUBE_HOST_URL}" />
     <property name="sonar.login" value="${env.SONARQUBE_HOST_USER}" />
     <property name="sonar.password" value="${env.SONARQUBE_HOST_PASS}" />
-    <property name="sonar.projectKey" value="${env.SONARQUBE_PROJECTKEY}" />
-    <property name="sonar.projectName" value="${env.SONARQUBE_PROJECTNAME}" />
+    <property name="sonar.projectKey" value="${env.SONARQUBE_PROJECT_KEY}" />
+    <property name="sonar.projectName" value="${env.SONARQUBE_PROJECT_NAME}" />
     <property name="sonar.branch" value="${env.HEROKU_TEST_RUN_BRANCH}" />
 
     <sonar:sonar xmlns:sonar="antlib:org.sonar.ant" />
