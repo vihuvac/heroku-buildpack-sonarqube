@@ -25,9 +25,9 @@ export DATABASE_URL_HOST=`parse_uri ${DATABASE_URL} host`
 export DATABASE_URL_PATH=`parse_uri ${DATABASE_URL} path`
 export PORT2=$((PORT + 1))
 
-echo "Binding to $PORT"
-echo "alive" | nc -w 10 -l -p $PORT
-echo "Released bind to $PORT"
+#echo "Binding to $PORT"
+#echo "alive" | nc -w 10 -l -p $PORT
+#echo "Released bind to $PORT"
 
 touch /app/sonarqube/logs/es.log
 touch /app/sonarqube/logs/ce.log
