@@ -11,48 +11,61 @@ CACHE_DIR=$2
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 SONAR_VERSION="6.3.1"
-SONAR_DIST="sonarqube-${SONAR_VERSION}"
-SONAR_DIST_ZIP="${SONAR_DIST}.zip"
-SONAR_HOME=${BUILD_DIR}/sonar
 
-if [ ! -d ${CACHE_DIR} ]; then
-  mkdir -p ${CACHE_DIR}
-fi
+install_jdk() {
+  local install_dir=${1}
 
-# Download Sonar if not in cache
-if [ ! -f ${CACHE_DIR}/${SONAR_DIST_ZIP} ]; then  
-  SONAR_URL="http://downloads.code-scan.com/bundler/${SONAR_DIST_ZIP}"
-  echo -n "-----> Downloading ${SONAR_DIST}....."
-  curl --silent --location ${SONAR_URL} > ${CACHE_DIR}/${SONAR_DIST_ZIP}
-  echo " done"
-fi
+  let start=$(nowms)
+  JVM_COMMON_BUILDPACK=${JVM_COMMON_BUILDPACK:-https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/jvm-common.tgz}
+  mkdir -p /tmp/jvm-common
+  curl --retry 3 --silent --location $JVM_COMMON_BUILDPACK | tar xzm -C /tmp/jvm-common --strip-components=1
+  source /tmp/jvm-common/bin/util
+  source /tmp/jvm-common/bin/java
+  source /tmp/jvm-common/opt/jdbc.sh
+  mtime "jvm-common.install.time" "${start}"
 
-echo -n "-----> Installing ${SONAR_DIST}...."
+  let start=$(nowms)
+  install_java_with_overlay ${install_dir}
+  mtime "jvm.install.time" "${start}"
+}
 
-# Unzip Sonar
-# `unzip` command is not available. 
-cd ${BUILD_DIR}
-jar xvf ${CACHE_DIR}/${SONAR_DIST_ZIP}
-mv ${SONAR_DIST} ${SONAR_HOME}
+install_sonar() {
+  local BUILD_DIR=${1}
+  local CACHE_DIR=${2}
 
-# Copy vendored properties into Sonar
-cp ${BP_DIR}/etc/sonar.properties ${SONAR_HOME}/conf
+  SONAR_DIST="sonarqube-${SONAR_VERSION}"
+  SONAR_DIST_ZIP="${SONAR_DIST}.zip"
+  SONAR_HOME=${BUILD_DIR}/sonar
 
-# Build the WAR
-cd ${SONAR_HOME}/war
-sed -i -r "s/ant$/ant -DsonarHome=\/app\/sonar/" build-war.sh
-chmod +x build-war.sh
-chmod +x apache-ant-1.7.0/bin/ant
-./build-war.sh
+  if [ ! -d ${CACHE_DIR} ]; then
+    mkdir -p ${CACHE_DIR}
+  fi
 
-# Copy the vendored boot script for launching the WAR
-cp ${BP_DIR}/opt/boot.sh ${SONAR_HOME}/war
-chmod +x ${SONAR_HOME}/war/boot.sh
+  # Download Sonar if not in cache
+  if [ ! -f ${CACHE_DIR}/${SONAR_DIST_ZIP} ]; then
+    SONAR_URL="http://downloads.code-scan.com/bundler/${SONAR_DIST_ZIP}"
+    echo -n "-----> Downloading ${SONAR_DIST}....."
+    curl --silent --location ${SONAR_URL} > ${CACHE_DIR}/${SONAR_DIST_ZIP}
+    echo " done"
+  fi
 
-echo " done"
+  echo -n "-----> Installing ${SONAR_DIST}...."
 
+  # Unzip Sonar
+  # `unzip` command is not available.
+  cd ${BUILD_DIR}
 
-if [ "${PIPESTATUS[*]}" != "0" ]; then
-  echo " !     Failed to install Sonar"
-  exit 1
-fi
+  jar xvf ${CACHE_DIR}/${SONAR_DIST_ZIP}
+  mv ${SONAR_DIST} ${SONAR_HOME}
+
+  # Copy vendored properties into Sonar
+  cp ${BP_DIR}/etc/sonar.properties ${SONAR_HOME}/conf
+
+  if [ "${PIPESTATUS[*]}" != "0" ]; then
+    echo " !     Failed to install Sonar"
+    exit 1
+  fi
+}
+
+install_jdk ${BUILD_DIR}
+install_sonar ${BUILD_DIR} ${CACHE_DIR}
