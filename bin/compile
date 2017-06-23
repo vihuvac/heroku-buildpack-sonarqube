@@ -52,7 +52,7 @@ install_sonarqube() {
   # `unzip` command is not available.
   cd ${BUILD_DIR}
 
-  jar xvf ${CACHE_DIR}/${SONAR_DIST_ZIP}
+  jar xvf ${CACHE_DIR}/${SONAR_DIST_ZIP} >/dev/null
   mv ${SONAR_DIST} ${SONAR_HOME}
 
   # Copy vendored properties into Sonar
@@ -98,10 +98,10 @@ install_codescan() {
   # `unzip` command is not available.
   cd ${BUILD_DIR}
 
-  jar xvf ${CACHE_DIR}/${CODESCAN_DIST_ZIP}
-  mv ${CODESCAN_DIST} ${CODESCAN_HOME}
+  jar xvf ${CACHE_DIR}/${CODESCAN_DIST_ZIP} >/dev/null
+  mv sonar-salesforce-plugin ${CODESCAN_HOME}
 
-  cp $CODESCAN_HOME/sonar-salesforce-plugin/sonar-salesforce-plugin-$CODESCAN_VERSION.jar $SONAR_HOME/extensions/plugins
+  cp $CODESCAN_HOME/sonar-salesforce-plugin-$CODESCAN_VERSION.jar $SONAR_HOME/extensions/plugins
 
   if [ "${PIPESTATUS[*]}" != "0" ]; then
     echo " !     Failed to install Sonar"
