@@ -29,5 +29,10 @@ echo "Binding to $PORT"
 echo "alive" | nc -w 10 -l -p $PORT
 echo "Released bind to $PORT"
 
+touch /app/sonarqube/logs/es.log
+touch /app/sonarqube/logs/ce.log
+touch /app/sonarqube/logs/web.log
+tail -F /app/sonarqube/logs/ce.log /app/sonarqube/logs/es.log /app/sonarqube/logs/web.log &
+
 exec /app/sonarqube/bin/linux-x86-64/sonar.sh console
 
