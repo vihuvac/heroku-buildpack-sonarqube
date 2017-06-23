@@ -59,7 +59,7 @@ install_sonarqube() {
   cp ${BP_DIR}/etc/sonar.properties ${SONAR_HOME}/conf
 
   #make wrapper writable
-  chmod +x $SONAR_HOME/bin/linux-x86-64/./wrapper
+  chmod +x $SONAR_HOME/bin/linux-x86-64/./wrapper $SONAR_HOME/bin/linux-x86-64/sonar.sh
 
   # Copy the vendored boot script for launching the WAR
   cp ${BP_DIR}/opt/boot.sh ${SONAR_HOME}/
@@ -69,6 +69,7 @@ install_sonarqube() {
     echo " !     Failed to install Sonar"
     exit 1
   fi
+  echo " done"
 }
 
 
@@ -107,6 +108,7 @@ install_codescan() {
     echo " !     Failed to install Sonar"
     exit 1
   fi
+  echo " done"
 }
 
 install_jdk ${BUILD_DIR}
