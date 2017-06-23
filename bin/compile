@@ -14,6 +14,7 @@ SONAR_VERSION="6.3.1"
 
 install_jdk() {
   local install_dir=${1}
+  java.runtime.version=1.8
 
   JVM_COMMON_BUILDPACK=${JVM_COMMON_BUILDPACK:-https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/jvm-common.tgz}
   mkdir -p /tmp/jvm-common
@@ -56,6 +57,13 @@ install_sonar() {
 
   # Copy vendored properties into Sonar
   cp ${BP_DIR}/etc/sonar.properties ${SONAR_HOME}/conf
+
+  #make wrapper writable
+  chmod +x /app/sonarqube/bin/linux-x86-64/./wrapper
+
+  # Copy the vendored boot script for launching the WAR
+  cp ${BP_DIR}/opt/boot.sh ${SONAR_HOME}/
+  chmod +x ${SONAR_HOME}/boot.sh
 
   if [ "${PIPESTATUS[*]}" != "0" ]; then
     echo " !     Failed to install Sonar"

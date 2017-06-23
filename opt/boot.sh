@@ -23,9 +23,11 @@ export DATABASE_URL_USERNAME=`parse_uri ${DATABASE_URL} username`
 export DATABASE_URL_PASSWORD=`parse_uri ${DATABASE_URL} password`
 export DATABASE_URL_HOST=`parse_uri ${DATABASE_URL} host`
 export DATABASE_URL_PATH=`parse_uri ${DATABASE_URL} path`
+let "PORT2=$PORT + 1"
 
 echo "Binding to $PORT"
 echo "alive" | nc -w 10 -l -p $PORT
 echo "Released bind to $PORT"
 
-exec java -jar jetty/runner.jar --port $PORT sonar/war/sonar.war
+exec /app/sonarqube/bin/linux-x86-64/sonar.sh console
+
