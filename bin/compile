@@ -10,36 +10,18 @@ CACHE_DIR=$2
 
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
-SONAR_VERSION="3.5.1"
-SONAR_DIST="sonar-${SONAR_VERSION}"
+SONAR_VERSION="6.3.1"
+SONAR_DIST="sonarqube-${SONAR_VERSION}"
 SONAR_DIST_ZIP="${SONAR_DIST}.zip"
 SONAR_HOME=${BUILD_DIR}/sonar
-
-JETTY_RUNNER_VERSION="8.1.0.RC1"
-JETTY_RUNNER_DIST="jetty-runner-${JETTY_RUNNER_VERSION}"
-JETTY_RUNNER_JAR="${JETTY_RUNNER_DIST}.jar"
 
 if [ ! -d ${CACHE_DIR} ]; then
   mkdir -p ${CACHE_DIR}
 fi
 
-# Download Jetty Runner is not in cache
-if [ ! -f ${CACHE_DIR}/${JETTY_RUNNER_JAR} ]; then  
-  JETTY_RUNNER_URL="http://repo1.maven.org/maven2/org/mortbay/jetty/jetty-runner/${JETTY_RUNNER_VERSION}/${JETTY_RUNNER_JAR}"
-  echo -n "-----> Downloading ${JETTY_RUNNER_DIST}....."
-  curl --silent --location ${JETTY_RUNNER_URL} > ${CACHE_DIR}/${JETTY_RUNNER_JAR}
-  echo " done"
-fi
-
-# Install Jetty Runner
-echo -n "-----> Installing ${JETTY_RUNNER_DIST}...."
-mkdir -p ${BUILD_DIR}/jetty
-cp ${CACHE_DIR}/${JETTY_RUNNER_JAR} ${BUILD_DIR}/jetty/runner.jar
-echo " done"
-
 # Download Sonar if not in cache
 if [ ! -f ${CACHE_DIR}/${SONAR_DIST_ZIP} ]; then  
-  SONAR_URL="http://dist.sonar.codehaus.org/${SONAR_DIST_ZIP}"
+  SONAR_URL="http://downloads.code-scan.com/bundler/${SONAR_DIST_ZIP}"
   echo -n "-----> Downloading ${SONAR_DIST}....."
   curl --silent --location ${SONAR_URL} > ${CACHE_DIR}/${SONAR_DIST_ZIP}
   echo " done"

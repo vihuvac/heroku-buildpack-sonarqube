@@ -8,8 +8,8 @@ testCompile()
   assertEquals 0 ${RETURN}
   assertEquals "" "`cat ${STD_ERR}`"
 
-  assertContains "-----> Downloading sonar"  "`cat ${STD_OUT}`"
-  assertTrue "Should have cached Sonar `ls -la ${CACHE_DIR}`" "[ -f ${CACHE_DIR}/sonar-2.11.tar.gz ]"
+  assertContains "-----> Downloading sonarqube"  "`cat ${STD_OUT}`"
+  assertTrue "Should have cached SonarQube `ls -la ${CACHE_DIR}`" "[ -f ${CACHE_DIR}/sonar-2.11.tar.gz ]"
   assertFileMD5 "cd4c36833faa82f234155c539338aff2" "${CACHE_DIR}/sonar-2.11.tar.gz"
 
   assertContains "-----> Installing sonar"  "`cat ${STD_OUT}`"
