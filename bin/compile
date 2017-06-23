@@ -107,9 +107,7 @@ install_codescan() {
 
   # Copy vendored antbuild.xml
   if [ ! -f ${BUILD_DIR}/build.xml ]; then
-    echo -n "-----> Installing default build.xml...."
     cp ${BP_DIR}/etc/antbuild.xml ${BUILD_DIR}/build.xml
-    echo " done"
   fi
 
   if [ "${PIPESTATUS[*]}" != "0" ]; then
@@ -158,4 +156,6 @@ install_ant() {
 install_jdk ${BUILD_DIR}
 install_sonarqube ${BUILD_DIR} ${CACHE_DIR}
 install_codescan ${BUILD_DIR} ${CACHE_DIR}
+install_ant ${BUILD_DIR} ${CACHE_DIR}
+
 
