@@ -11,7 +11,7 @@ CACHE_DIR=$2
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 SONAR_VERSION="6.3.1"
-CODESCAN_VERSION="3.7.5"
+CODESCAN_VERSION="4.0.5"
 ANT_VERSION="1.9.9"
 SONAR_HOME=${BUILD_DIR}/sonarqube
 
