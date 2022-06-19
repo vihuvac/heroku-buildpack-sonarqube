@@ -10,8 +10,7 @@ CACHE_DIR=$2
 
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
-SONAR_VERSION="7.4"
-ANT_VERSION="1.9.9"
+SONAR_VERSION="8.9"
 SONAR_HOME=${BUILD_DIR}/sonarqube
 
 echo ${SONAR_HOME};
@@ -31,7 +30,7 @@ install_jdk() {
   if [ ! -f ${CACHE_DIR}/${JVM_COMMON} ]; then
     curl --retry 3 --silent --location $JVM_COMMON_BUILDPACK > ${CACHE_DIR}/${JVM_COMMON}
   fi
-  mkdir -p /tmp/jvm-common  
+  mkdir -p /tmp/jvm-common
   tar xzmf ${CACHE_DIR}/${JVM_COMMON} -C /tmp/jvm-common --strip-components=1
   source /tmp/jvm-common/bin/util
   source /tmp/jvm-common/bin/java
@@ -84,7 +83,7 @@ install_sonarqube() {
 install_sonarts_plugin() {
   local BUILD_DIR=${1}
   local CACHE_DIR=${2}
-  
+
   SONARTS_DIST_JAR="sonar-typescript-plugin-1.6.0.2388.jar"
   SONARTS_URL="https://sonarsource.bintray.com/Distribution/sonar-typescript-plugin/${SONARTS_DIST_JAR}"
 
