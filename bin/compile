@@ -10,7 +10,7 @@ CACHE_DIR=$2
 
 BP_DIR=`cd $(dirname $0); cd ..; pwd`
 
-SONAR_VERSION="8.9"
+SONAR_VERSION="9.5.0.56709"
 SONAR_HOME=${BUILD_DIR}/sonarqube
 
 echo ${SONAR_HOME};
